@@ -18,7 +18,7 @@ public class VeiculoService {
 
     public List<Veiculo> findAllVeiculos(int page, int size) {
         int offset = (page - 1) * size;
-        return this.veiculoRepository.findAll(page, offset);
+        return this.veiculoRepository.findAll(size, offset);
     }
 
     public Optional<Veiculo> findVeiculoById(Long id){
@@ -27,7 +27,7 @@ public class VeiculoService {
 
     public void saveVeiculo(Veiculo veiculo){
         var save = this.veiculoRepository.save(veiculo);
-        Assert.state(save == 0, "Erro ao salvar veiculo " + veiculo.getModelo());
+        Assert.state(save == 1, "Erro ao salvar veiculo " + veiculo.getModelo());
     }
 
     public void updateVeiculo(Veiculo veiculo, Long id){
