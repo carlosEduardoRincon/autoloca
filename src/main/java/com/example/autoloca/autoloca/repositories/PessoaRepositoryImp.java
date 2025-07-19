@@ -38,7 +38,7 @@ public class PessoaRepositoryImp implements PessoaRepository {
     @Override
     public Integer save(Pessoa pessoa) {
         return this.jdbcClient
-                .sql("INSERT INTO veiculos (nome, cpf, email, telefone) VALUES (:nome, :cpf, :email, :telefone)")
+                .sql("INSERT INTO pessoas (nome, cpf, email, telefone) VALUES (:nome, :cpf, :email, :telefone)")
                 .param("nome", pessoa.getNome())
                 .param("cpf", pessoa.getCpf())
                 .param("email", pessoa.getEmail())
@@ -49,7 +49,7 @@ public class PessoaRepositoryImp implements PessoaRepository {
     @Override
     public Integer update(Pessoa pessoa, Long id) {
         return this.jdbcClient
-                .sql("UPDATE veiculos SET nome = :nome, cpf = :cpf, email = :email, telefone = :telefone WHERE id = :id")
+                .sql("UPDATE pessoas SET nome = :nome, cpf = :cpf, email = :email, telefone = :telefone WHERE id = :id")
                 .param("nome", pessoa.getNome())
                 .param("cpf", pessoa.getCpf())
                 .param("email", pessoa.getEmail())
