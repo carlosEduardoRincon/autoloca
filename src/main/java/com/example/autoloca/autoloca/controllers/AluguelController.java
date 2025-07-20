@@ -3,6 +3,7 @@ package com.example.autoloca.autoloca.controllers;
 import com.example.autoloca.autoloca.dtos.AluguelRequestDTO;
 import com.example.autoloca.autoloca.entities.Aluguel;
 import com.example.autoloca.autoloca.services.AluguelService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class AluguelController {
 
     @PostMapping
     public ResponseEntity<Void> saveAluguel(
-            @RequestBody AluguelRequestDTO aluguelRequestDTO
+            @Valid @RequestBody AluguelRequestDTO aluguelRequestDTO
     ) {
         log.info("[POST] Iniciando persistência do aluguel");
         this.aluguelService.saveAluguel(aluguelRequestDTO);
