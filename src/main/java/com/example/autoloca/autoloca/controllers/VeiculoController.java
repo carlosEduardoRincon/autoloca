@@ -2,6 +2,9 @@ package com.example.autoloca.autoloca.controllers;
 
 import com.example.autoloca.autoloca.entities.Veiculo;
 import com.example.autoloca.autoloca.services.VeiculoService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -13,6 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/veiculo")
+@Tag(name = "Veiculo", description = "CRUD para veículos")
 public class VeiculoController {
 
     private static final Logger log = LoggerFactory.getLogger(VeiculoController.class);
@@ -23,6 +27,13 @@ public class VeiculoController {
         this.veiculoService = veiculoService;
     }
 
+    @Operation(
+            description = "Busca todos os veículos paginados",
+            summary = "Busca de veículos",
+            responses = {
+                    @ApiResponse(description = "Ok", responseCode = "200")
+            }
+    )
     @GetMapping
     public ResponseEntity<List<Veiculo>> findAllVeiculos(
             @RequestParam("page") int page,
