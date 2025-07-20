@@ -1,21 +1,26 @@
 package com.example.autoloca.autoloca.services;
 
+import com.example.autoloca.autoloca.dtos.AluguelRequestDTO;
 import com.example.autoloca.autoloca.entities.Aluguel;
-import com.example.autoloca.autoloca.entities.Pessoa;
 import com.example.autoloca.autoloca.repositories.AluguelRepository;
-import com.example.autoloca.autoloca.repositories.PessoaRepository;
+import com.example.autoloca.autoloca.repositories.VeiculoRepository;
+import com.example.autoloca.autoloca.services.exceptions.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class AluguelService {
     private final AluguelRepository aluguelRepository;
+    private final VeiculoRepository veiculoRepository;
 
-    public AluguelService(AluguelRepository aluguelRepository) {
+    public AluguelService(AluguelRepository aluguelRepository,
+                          VeiculoRepository veiculoRepository) {
         this.aluguelRepository = aluguelRepository;
+        this.veiculoRepository = veiculoRepository;
     }
 
     public List<Aluguel> findAllAlugueis(int page, int size) {
@@ -24,12 +29,14 @@ public class AluguelService {
     }
 
     public Optional<Aluguel> findAluguelById(Long id){
-        return this.aluguelRepository.findById(id);
+        return Optional.ofNullable(this.aluguelRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Aluguel não encontrado")));
     }
 
-    public void saveAluguel(Aluguel aluguel){
-        var save = this.aluguelRepository.save(aluguel);
-        Assert.state(save == 1, "Erro ao salvar aluguel " + aluguel.getPessoaId());
+    public void saveAluguel(AluguelRequestDTO aluguelRequestDTO){
+        var aluguelEntity = calculaAluguel(aluguelRequestDTO);
+        var save = this.aluguelRepository.save(aluguelEntity);
+        Assert.state(save == 1, "Erro ao salvar aluguel " + aluguelRequestDTO.pessoaId());
     }
 
     public void updateAluguel(Aluguel aluguel, Long id){
@@ -44,5 +51,13 @@ public class AluguelService {
         if (delete == 0) {
             throw new RuntimeException("Aluguel não encontrado");
         }
+    }
+
+    private Aluguel calculaAluguel(AluguelRequestDTO aluguelRequestDTO){
+        var veiculo = this.veiculoRepository.findById(aluguelRequestDTO.veiculoId())
+                .orElseThrow(() -> new RuntimeException("Veículo não encontrado"));
+        var quantidadeDeDias = BigDecimal.valueOf(aluguelRequestDTO.dataFim().getDayOfYear() - aluguelRequestDTO.dataInicio().getDayOfYear());
+        var valor = veiculo.getValorDiaria().multiply(quantidadeDeDias);
+        return new Aluguel(aluguelRequestDTO, valor);
     }
 }

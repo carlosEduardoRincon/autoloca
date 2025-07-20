@@ -1,5 +1,6 @@
 package com.example.autoloca.autoloca.controllers;
 
+import com.example.autoloca.autoloca.dtos.AluguelRequestDTO;
 import com.example.autoloca.autoloca.entities.Aluguel;
 import com.example.autoloca.autoloca.services.AluguelService;
 import org.slf4j.Logger;
@@ -43,10 +44,10 @@ public class AluguelController {
 
     @PostMapping
     public ResponseEntity<Void> saveAluguel(
-            @RequestBody Aluguel aluguel
+            @RequestBody AluguelRequestDTO aluguelRequestDTO
     ) {
         log.info("[POST] Iniciando persistência do aluguel");
-        this.aluguelService.saveAluguel(aluguel);
+        this.aluguelService.saveAluguel(aluguelRequestDTO);
         return ResponseEntity.status(201).build();
     }
 
