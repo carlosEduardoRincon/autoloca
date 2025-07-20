@@ -43,5 +43,4 @@ public class PessoaService {
             throw new RuntimeException("Pessoa não encontrada");
         }
     }
-
 }
